@@ -39,8 +39,8 @@ def fetch_bamboohr_report(file_path):
 
     headers = {
         "Authorization": "Basic " + base64.b64encode(f"{api_key}:".encode()).decode(),
-        "Accept": "application/json",
-        "Content-Type": "application/json; charset=UTF-8"
+        "Accept": "application/json" #,
+        # "Content-Type": "application/json; charset=UTF-8"
     }
 
     try:
