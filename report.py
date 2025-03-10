@@ -1,7 +1,7 @@
 import pandas as pd
 import requests
 import base64
-from openpyxl import load_workbook
+# from openpyxl import load_workbook
 
 
 # Load settings from the "Settings" sheet
@@ -17,18 +17,14 @@ def load_settings(file_path):
 
 # Fetch BambooHR custom report
 def fetch_bamboohr_report(file_path):
-    # settings = load_settings(file_path)
-    # if not settings:
-    #     print("Error: Could not load settings.")
-    #    return
-    
-    # api_key = settings.get("bamboo_key")
-    # subdomain = settings.get("bamboo_domain")
-    # report_id = settings.get("bamboo_comp_report")
+    settings = load_settings(file_path)
+    if not settings:
+        print("Error: Could not load settings.")
+        return
 
-    api_key = "4d5052be2a809b964d915109d871332d92ba7aea"
-    subdomain = "cognite"
-    report_id = "2299"
+    api_key = settings.get("bamboo_key")
+    subdomain = settings.get("bamboo_domain")
+    report_id = settings.get("bamboo_comp_report")
 
     if not api_key or not subdomain or not report_id:
         print("Error: Missing API key, domain, or report ID.")
@@ -39,8 +35,7 @@ def fetch_bamboohr_report(file_path):
 
     headers = {
         "Authorization": "Basic " + base64.b64encode(f"{api_key}:".encode()).decode(),
-        "Accept": "application/json" #,
-        # "Content-Type": "application/json; charset=UTF-8"
+        "Accept": "application/json"
     }
 
     try:
@@ -52,7 +47,6 @@ def fetch_bamboohr_report(file_path):
             return
 
         report_data = response.json()
-        print(report_data)
 
         if "fields" not in report_data or "employees" not in report_data:
             print("No valid data found in report.")
@@ -119,11 +113,9 @@ def fetch_bamboohr_employees(file_path):
     except Exception as e:
         print(f"Error fetching BambooHR data: {e}")
 
+
 # Example Usage
-# if __name__ == "__main__":
-#    excel_file = "bamboohr_data.xlsx"  # Change this to your Excel file path
-#    fetch_bamboohr_report(excel_file)
-#    fetch_bamboohr_employees(excel_file)
-
-
-fetch_bamboohr_report("Report.xlsx")
+if __name__ == "__main__":
+    excel_file = "bamboohr_data.xlsx"  # Change this to your Excel file path
+    fetch_bamboohr_report(excel_file)
+    fetch_bamboohr_employees(excel_file)
